@@ -2,33 +2,40 @@
  * @Author: detcx 
  * @Date: 2018-09-30 09:44:59 
  * @Last Modified by: Chosen
- * @Last Modified time: 2018-10-09 17:55:29
+ * @Last Modified time: 2018-10-10 12:33:59
  * @description development configuration
  */
 
+const os = require('os');
 const path = require('path');
 const webpack = require('webpack');
 const HappyPack = require('happypack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DllReferencePlugin = require('webpack/lib/DllReferencePlugin');
-const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
-const happyThreadPool = HappyPack.ThreadPool({size: 7});
+const HappyThreadPool = HappyPack.ThreadPool({size: os.cpus().length - 1});
 
 
 module.exports = {
-  mode: 'production', // development production
+  mode: 'development', // development production
   devtool: false,
   entry: './src/components/index.jsx',
   output: {
-    filename: 'js/[name].bundle.js',
-    chunkFilename: 'js/[name].[hash:6].js',
+    filename: 'js/[name].[hash:6].js',
+    chunkFilename: 'js/[name].[chunkhash:6].js', // production name -> id
     path: path.resolve(__dirname, 'dist'), // 打包后的目录，必须是绝对路径
     publicPath: '/' // 默认是 '/', 但现在静态资源地址是 dist
   },
   optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: path.resolve(__dirname, 'dist/cache'),
+        parallel: os.cpus().length - 1
+      })
+    ],
     splitChunks: {
       chunks: 'all',
       maxAsyncRequests: 15,
@@ -147,7 +154,7 @@ module.exports = {
     new HappyPack({
       id: 'jsx',
       loaders: ['babel-loader?cacheDirectory'],
-      threadPool: happyThreadPool
+      threadPool: HappyThreadPool
     }),
     new HappyPack({
       id: 'cssNodeModules',
@@ -155,7 +162,7 @@ module.exports = {
         'css-loader',
         'postcss-loader'
       ],
-      threadPool: happyThreadPool
+      threadPool: HappyThreadPool
     }),
     new HappyPack({
       id: 'lessNodeModules',
@@ -164,7 +171,7 @@ module.exports = {
         'postcss-loader',
         'less-loader'
       ],
-      threadPool: happyThreadPool
+      threadPool: HappyThreadPool
     }),
     new HappyPack({
       id: 'cssExcNodeModules',
@@ -179,7 +186,7 @@ module.exports = {
         },
         'postcss-loader',
       ],
-      threadPool: happyThreadPool
+      threadPool: HappyThreadPool
     }),
     new HappyPack({
       id: 'lessExcNodeModules',
@@ -195,13 +202,13 @@ module.exports = {
         'postcss-loader',
         'less-loader'
       ],
-      threadPool: happyThreadPool
+      threadPool: HappyThreadPool
     }),
 
     new webpack.HotModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
-      chunkFilename: 'css/[id].hash[hash:6].css', // 供应商(vendor)样式文件
+      filename: 'css/[name].[contenthash:6].css',
+      chunkFilename: 'css/[id].[contenthash:6].css', // 供应商(vendor)样式文件
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
@@ -209,23 +216,7 @@ module.exports = {
       favicon: __dirname + '/src/favicon.ico',
       template: __dirname + '/template/index.html'
     }),
-    new CleanWebpackPlugin(['dist'], {exclude: ['dll']}),
-    /* // 使用 ParallelUglifyPlugin 并行压缩 js
-    new ParallelUglifyPlugin({
-      // workerCount: 7,
-      uglifyJS: {
-        output: {
-          beautify: false,
-          comments: false
-        },
-        compress: {
-          warnings: false,
-          drop_console: true,
-          collapse_vars: true,
-          reduce_vars: true
-        }
-      }
-    }), */
+    new CleanWebpackPlugin(['dist'], {exclude: ['dll', 'cache']}),
     new CopyWebpackPlugin([
       {
         from: 'src/fonts/',

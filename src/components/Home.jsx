@@ -31,7 +31,7 @@ class Home extends Component {
         { toast }
         <div className={homeStyle['title']}>Home</div>
         <div className={homeStyle['banner']}>
-          <img src={d2} alt="龙猫" />
+          <img src={d2} alt="龙猫sf" />
         </div>
         <DatePicker />
       </div>

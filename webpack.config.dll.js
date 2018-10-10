@@ -5,10 +5,12 @@
  * 如果 react 是全局变量, 组件中就不需要 import 了.
  * 只有 _dll_react 是全局的. 可以 window._dll_react 获取到.
  */
+
+const os = require('os');
 const path = require('path');
 const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 
 module.exports = {
   mode: 'production', // development production
@@ -28,23 +30,10 @@ module.exports = {
     library: '_dll_[name]'
   },
   optimization: {
-    minimize: true,
     minimizer: [
-      // 多线程压缩
-      new ParallelUglifyPlugin({
-        workerCount: 7,
-        uglifyJS: {
-          output: {
-            beautify: false,
-            comments: false
-          },
-          compress: {
-            warnings: false,
-            drop_console: true,
-            collapse_vars: true,
-            reduce_vars: true
-          }
-        }
+      new UglifyJsPlugin({
+        cache: path.resolve(__dirname, 'dist/cache'),
+        parallel: os.cpus().length - 1
       })
     ]
   },

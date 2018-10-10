@@ -23,13 +23,14 @@
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.3",
+    "os": "^0.1.1",
     "postcss-loader": "^3.0.0",
     "style-loader": "^0.23.0",
+    "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.8",
-    "webpack-parallel-uglify-plugin": "^1.1.0"
+    "webpack-dev-server": "^3.1.8"
   },
   "dependencies": {
     "antd": "^3.10.0",
@@ -44,6 +45,6 @@
   "scripts": {
     "dll-build": "webpack --progress --config webpack.config.dll.js",
     "build": "webpack --progress --config webpack.config.dev.js",
-    "server": "webpack-dev-server --config webpack.config.dev.js"
+    "server": "npm run dll-build && webpack-dev-server --config webpack.config.dev.js"
   }
 }

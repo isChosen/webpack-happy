@@ -10,7 +10,7 @@ class Profile extends Component {
       <div className={profileStyle['hello']}>
         <h3>Profile page</h3>
         <div className="weui-flex js_category">
-            <p className="weui-flex__item">表单</p>
+            <p className="weui-flex__item">表单ssdf</p>
         </div>
       </div>
     );
