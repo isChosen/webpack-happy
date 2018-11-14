@@ -130,7 +130,6 @@ module.exports = {
     publicPath: '/',
     contentBase: path.resolve(__dirname, 'dist'),
     host: 'localhost',
-    disableHostCheck: true,
     historyApiFallback: true
   },
 
