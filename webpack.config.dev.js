@@ -1,11 +1,3 @@
-/**
- * @Author: Detcx 
- * @Date: 2018-09-30 09:44:59 
- * @Last Modified by: Chosen
- * @Last Modified time: 2018-11-15 19:13:55
- * @description development
- */
-
 const os = require('os');
 const path = require('path');
 const webpack = require('webpack');
@@ -24,14 +16,14 @@ module.exports = {
   devtool: false,
   entry: './src/components/index.jsx',
   output: {
-    filename: 'js/[name].[hash:6].js',
-    chunkFilename: 'js/[name].[chunkhash:6].js', // production name -> id
-    path: path.resolve(__dirname, 'dist'), // 打包后的目录，必须是绝对路径
-    publicPath: '/' // 默认是 '/', 但现在静态资源地址是 dist
+    filename: 'js/[name].bundle[hash:6].js',
+    chunkFilename: 'js/[name][chunkhash:6].js', // production: name -> id
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/'
   },
   optimization: {
     minimizer: [
-      new UglifyJsPlugin({
+      new UglifyJsPlugin({ // 启用多进程压缩
         cache: path.resolve(__dirname, 'dist/cache'),
         parallel: os.cpus().length - 1
       })
@@ -46,7 +38,7 @@ module.exports = {
           name: 'chunk-libs',
           test: /[\\/]node_modules[\\/]/,
           priority: 10,
-          chunks: 'initial' // 只打包初始时依赖的第三方
+          chunks: 'initial' // 打包初始时依赖的第三方
         },
         antDesign: {
           name: 'chunk-antd',
@@ -123,14 +115,14 @@ module.exports = {
   },
 
   devServer: {
-    open: true,
-    port: '8051',
     hot: true,
+    open: true,
     https: false,
+    port: '8051',
     publicPath: '/',
-    contentBase: path.resolve(__dirname, 'dist'),
     host: 'localhost',
-    historyApiFallback: true
+    historyApiFallback: true,
+    contentBase: path.resolve(__dirname, 'dist')
   },
 
   resolve: {
@@ -215,7 +207,7 @@ module.exports = {
       favicon: __dirname + '/favicon.ico',
       template: __dirname + '/index.html'
     }),
-    new CleanWebpackPlugin(['dist'], {exclude: ['dll', 'cache']}),
+    new CleanWebpackPlugin(['dist'], {exclude: ['dll', 'cache']}), // 清理时排除 dist/dll 和 dist/cache 目录
     new CopyWebpackPlugin([
       {
         from: 'src/fonts/',

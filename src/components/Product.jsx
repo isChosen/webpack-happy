@@ -1,8 +1,3 @@
-/**
- * @description echarts 并不是全局变量,
- * dll 动态链接库文件的意思是, 依赖会从 dll 中寻找
- * 若 echarts 是全局变量, 就不需要 import 了
- */
 import React, { Component } from 'react';
 import Echarts from 'echarts/lib/echarts';
 import 'echarts/lib/chart/bar';
