@@ -1,9 +1,9 @@
 /**
- * @Author: detcx 
+ * @Author: Detcx 
  * @Date: 2018-09-30 09:44:59 
  * @Last Modified by: Chosen
- * @Last Modified time: 2018-10-10 12:33:59
- * @description development configuration
+ * @Last Modified time: 2018-11-15 19:13:55
+ * @description development
  */
 
 const os = require('os');
@@ -20,7 +20,7 @@ const HappyThreadPool = HappyPack.ThreadPool({size: os.cpus().length - 1});
 
 
 module.exports = {
-  mode: 'development', // development production
+  mode: 'development',
   devtool: false,
   entry: './src/components/index.jsx',
   output: {
@@ -124,13 +124,12 @@ module.exports = {
 
   devServer: {
     open: true,
-    port: '8050',
+    port: '8051',
     hot: true,
     https: false,
     publicPath: '/',
     contentBase: path.resolve(__dirname, 'dist'),
     host: 'localhost',
-    disableHostCheck: true,
     historyApiFallback: true
   },
 
@@ -207,14 +206,14 @@ module.exports = {
 
     new webpack.HotModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].[contenthash:6].css',
-      chunkFilename: 'css/[id].[contenthash:6].css', // 供应商(vendor)样式文件
+      filename: 'css/[name][contenthash:6].css',
+      chunkFilename: 'css/[id][contenthash:6].css', // 供应商(vendor)样式文件
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      title: 'Oh-webpack-happy',
-      favicon: __dirname + '/src/favicon.ico',
-      template: __dirname + '/template/index.html'
+      title: 'webpack-happy',
+      favicon: __dirname + '/favicon.ico',
+      template: __dirname + '/index.html'
     }),
     new CleanWebpackPlugin(['dist'], {exclude: ['dll', 'cache']}),
     new CopyWebpackPlugin([

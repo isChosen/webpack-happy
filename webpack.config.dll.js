@@ -1,11 +1,3 @@
-/**
- * @summary 采用动态链库可以大大提升构建速度
- * dll 动态链接库文件的意思是, 依赖的模块会从 dll 中寻找.
- * @description 位于 dll 中的模块不是全局变量, 比如:
- * 如果 react 是全局变量, 组件中就不需要 import 了.
- * 只有 _dll_react 是全局的. 可以 window._dll_react 获取到.
- */
-
 const os = require('os');
 const path = require('path');
 const webpack = require('webpack');
@@ -13,7 +5,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-  mode: 'production', // development production
+  mode: 'production',
   entry: {
     // 将 React 相关的模块放到一个单独的动态链表库中
     react: ['react', 'react-dom'],
@@ -26,7 +18,7 @@ module.exports = {
     // 也就是 entry 中配置的 react 和 polyfill, etc
     filename: '[name].dll.js',
     path: path.resolve(__dirname, 'dist/dll'),
-    // 存放动态链接库的全局变量名称, 加上 _dll_ 防止全局变量冲突
+    // 存放动态链接库的全局变量名称, 例如对于 react 来时就是 _dll_react,  加上 _dll_ 防止全局变量冲突
     library: '_dll_[name]'
   },
   optimization: {
@@ -38,7 +30,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(['dist/dll/*']),
+    new CleanWebpackPlugin(['dist/dll/', 'dist/cache/']),
     // 接入 DllPlugin
     new webpack.DllPlugin({
       // 动态链表库的全局变量名称, 和 output.library 一致
