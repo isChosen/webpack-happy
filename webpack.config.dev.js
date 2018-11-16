@@ -14,7 +14,7 @@ const HappyThreadPool = HappyPack.ThreadPool({size: os.cpus().length - 1});
 module.exports = {
   mode: 'development',
   devtool: false,
-  entry: './src/components/index.jsx',
+  entry: './src/index.jsx',
   output: {
     filename: 'js/[name].bundle[hash:6].js',
     chunkFilename: 'js/[name][chunkhash:6].js', // production: name -> id
@@ -22,12 +22,12 @@ module.exports = {
     publicPath: '/'
   },
   optimization: {
-    minimizer: [
-      new UglifyJsPlugin({ // 启用多进程压缩
+    /* minimizer: [ // production 启用多进程压缩
+      new UglifyJsPlugin({
         cache: path.resolve(__dirname, 'dist/cache'),
         parallel: os.cpus().length - 1
       })
-    ],
+    ], */
     splitChunks: {
       chunks: 'all',
       maxAsyncRequests: 15,
@@ -58,9 +58,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?/,
+        test: /\.jsx?$/,
         exclude: path.resolve(__dirname, 'node_modules'),
-        // use: 'babel-loader'
         use: 'happypack/loader?id=jsx'
       },
       /* node_modules 引入的样式不需要模块化 */
