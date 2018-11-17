@@ -7,7 +7,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const DllReferencePlugin = require('webpack/lib/DllReferencePlugin');
 const HappyThreadPool = HappyPack.ThreadPool({size: os.cpus().length - 1});
 
 
@@ -29,6 +28,7 @@ module.exports = {
       })
     ], */
     splitChunks: {
+      name: true,
       chunks: 'all',
       maxAsyncRequests: 15,
       maxInitialRequests: 10,
@@ -58,7 +58,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(jsx?|es6)$/,
         exclude: path.resolve(__dirname, 'node_modules'),
         use: 'happypack/loader?id=jsx'
       },
@@ -131,13 +131,13 @@ module.exports = {
   },
 
   plugins: [
-    new DllReferencePlugin({
+    new webpack.DllReferencePlugin({
       manifest: require('./dist/dll/react.manifest.json')
     }),
-    new DllReferencePlugin({
+    new webpack.DllReferencePlugin({
       manifest: require('./dist/dll/polyfill.manifest.json')
     }),
-    new DllReferencePlugin({
+    new webpack.DllReferencePlugin({
       manifest: require('./dist/dll/echarts.manifest.json')
     }),
     // 多进程
@@ -206,7 +206,7 @@ module.exports = {
       favicon: __dirname + '/favicon.ico',
       template: __dirname + '/index.html'
     }),
-    new CleanWebpackPlugin(['dist'], {exclude: ['dll', 'cache']}), // 清理时排除 dist/dll 和 dist/cache 目录
+    new CleanWebpackPlugin(['dist'], {exclude: ['dll']}), // 清理时排除 dist/dll
     new CopyWebpackPlugin([
       {
         from: 'src/fonts/',
