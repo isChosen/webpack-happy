@@ -15,7 +15,7 @@ module.exports = {
   entry: './src/index.jsx',
   output: {
     filename: 'js/[name].bundle[hash:6].js',
-    chunkFilename: 'js/[name][chunkhash:6].js', // production: name -> id
+    chunkFilename: 'js/[name].bundle[chunkhash:6].js', // production: name -> id
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/'
   },
