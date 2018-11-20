@@ -4,7 +4,6 @@ const webpack = require('webpack');
 const HappyPack = require('happypack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HappyThreadPool = HappyPack.ThreadPool({size: os.cpus().length - 1});
@@ -21,12 +20,6 @@ module.exports = {
     publicPath: '/'
   },
   optimization: {
-    /* minimizer: [ // production 启用多进程压缩
-      new UglifyJsPlugin({
-        cache: path.resolve(__dirname, 'dist/cache'),
-        parallel: os.cpus().length - 1
-      })
-    ], */
     splitChunks: {
       name: true,
       chunks: 'all',
@@ -198,7 +191,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/[name][contenthash:6].css',
-      chunkFilename: 'css/[id][contenthash:6].css', // 供应商(vendor)样式文件
+      chunkFilename: 'css/[name][contenthash:6].css', // 供应商(vendor)样式文件
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
